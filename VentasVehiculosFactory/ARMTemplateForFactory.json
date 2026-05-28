@@ -1,0 +1,950 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Nombre de instancia de Data Factory",
+			"defaultValue": "VentasVehiculosFactory"
+		},
+		"FileLocation_password": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"password\"de \"FileLocation\""
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"type": "secureString",
+			"metadata": "Cadena protegida para \"accountKey\"de \"AzureDataLakeStorage1\""
+		},
+		"FileLocation_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\Users\\Carolina\\Desktop\\CICLO 10\\BIG DATA\\TF-FINAL DATA"
+		},
+		"FileLocation_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "Carolina"
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://ventavehiculosst.dfs.core.windows.net/"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/OnPremptoAzureIntegrationRunTime')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FileLocation')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "FileServer",
+				"typeProperties": {
+					"host": "[parameters('FileLocation_properties_typeProperties_host')]",
+					"userId": "[parameters('FileLocation_properties_typeProperties_userId')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FileLocation_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "OnPremptoAzureIntegrationRunTime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/OnPremptoAzureIntegrationRunTime')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnPremptoCloudPipeline')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "VentasVehiculos",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "VentaVehiculos",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "ServivioPosVenta",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "VentasVehiculos",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ServicioPorVenta",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "AtencionCliente",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "ServivioPosVenta",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "AtencionAlCliente",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "EncuestaSatisfaccion",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "DiccionarioDatos",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "EncuestaSatisfaccion",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "DiccionarioDatos",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "AtencionCliente",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ExcelSource",
+								"storeSettings": {
+									"type": "FileServerReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DiccionarioDatos",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Succes",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "EncuestaSatisfaccion",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {},
+							"url": "https://prod-01.eastus.logic.azure.com:443/workflows/ae3e4a80db304aa790292f315b9c443a/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=I8Pjsiowanr0cF1ZZfPiVg_QjHGky0FdCNbUEWUX2JI",
+							"body": {
+								"value": "{\n    \"pipelineName\": \"@{pipeline().Pipeline}\",\n    \"status\": \"Succeeded\",\n    \"runId\": \"@{pipeline().RunId}\",\n    \"time\": \"@{utcNow()}\"\n}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Fail",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "EncuestaSatisfaccion",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"method": "POST",
+							"headers": {},
+							"url": "https://prod-01.eastus.logic.azure.com:443/workflows/ae3e4a80db304aa790292f315b9c443a/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=I8Pjsiowanr0cF1ZZfPiVg_QjHGky0FdCNbUEWUX2JI",
+							"body": {
+								"value": "{\n    \"pipelineName\": \"@{pipeline().Pipeline}\",\n    \"status\": \"Fail\",\n    \"runId\": \"@{pipeline().RunId}\",\n    \"time\": \"@{utcNow()}\"\n}",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/VentaVehiculos')]",
+				"[concat(variables('factoryId'), '/datasets/Sink')]",
+				"[concat(variables('factoryId'), '/datasets/ServicioPorVenta')]",
+				"[concat(variables('factoryId'), '/datasets/AtencionAlCliente')]",
+				"[concat(variables('factoryId'), '/datasets/EncuestaSatisfaccion')]",
+				"[concat(variables('factoryId'), '/datasets/DiccionarioDatos')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VentaVehiculos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FileLocation",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Ventas_Vehiculos",
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "Data_Sintetica_Gildemeister_BigData_2026.xlsx"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "ID_Venta",
+						"type": "String"
+					},
+					{
+						"name": "Fecha_Venta",
+						"type": "String"
+					},
+					{
+						"name": "ID_Cliente",
+						"type": "String"
+					},
+					{
+						"name": "ID_Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Ciudad",
+						"type": "String"
+					},
+					{
+						"name": "ID_Asesor",
+						"type": "String"
+					},
+					{
+						"name": "Asesor_Comercial",
+						"type": "String"
+					},
+					{
+						"name": "ID_Vehiculo",
+						"type": "String"
+					},
+					{
+						"name": "Marca",
+						"type": "String"
+					},
+					{
+						"name": "Modelo",
+						"type": "String"
+					},
+					{
+						"name": "Categoria",
+						"type": "String"
+					},
+					{
+						"name": "Canal_Venta",
+						"type": "String"
+					},
+					{
+						"name": "Precio_Lista_USD",
+						"type": "String"
+					},
+					{
+						"name": "Descuento_USD",
+						"type": "String"
+					},
+					{
+						"name": "Monto_Venta_USD",
+						"type": "String"
+					},
+					{
+						"name": "Margen_Estimado_USD",
+						"type": "String"
+					},
+					{
+						"name": "Estado_Venta",
+						"type": "String"
+					},
+					{
+						"name": "Tiempo_Cierre_Dias",
+						"type": "String"
+					},
+					{
+						"name": "Tiene_Postventa",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FileLocation')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ServicioPorVenta')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FileLocation",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Servicios_Postventa",
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "Data_Sintetica_Gildemeister_BigData_2026.xlsx"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "ID_Servicio",
+						"type": "String"
+					},
+					{
+						"name": "Fecha_Servicio",
+						"type": "String"
+					},
+					{
+						"name": "ID_Cliente",
+						"type": "String"
+					},
+					{
+						"name": "ID_Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Ciudad",
+						"type": "String"
+					},
+					{
+						"name": "ID_Asesor_Servicio",
+						"type": "String"
+					},
+					{
+						"name": "Asesor_Servicio",
+						"type": "String"
+					},
+					{
+						"name": "Tipo_Servicio",
+						"type": "String"
+					},
+					{
+						"name": "Kilometraje",
+						"type": "String"
+					},
+					{
+						"name": "Monto_Servicio_USD",
+						"type": "String"
+					},
+					{
+						"name": "Tiempo_Espera_Horas",
+						"type": "String"
+					},
+					{
+						"name": "Tiempo_Entrega_Dias",
+						"type": "String"
+					},
+					{
+						"name": "Estado_Servicio",
+						"type": "String"
+					},
+					{
+						"name": "Reincidencia",
+						"type": "String"
+					},
+					{
+						"name": "Observacion",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FileLocation')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AtencionAlCliente')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FileLocation",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Atencion_Cliente",
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "Data_Sintetica_Gildemeister_BigData_2026.xlsx"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "ID_Caso",
+						"type": "String"
+					},
+					{
+						"name": "Fecha_Caso",
+						"type": "String"
+					},
+					{
+						"name": "ID_Cliente",
+						"type": "String"
+					},
+					{
+						"name": "ID_Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Canal_Atencion",
+						"type": "String"
+					},
+					{
+						"name": "Motivo",
+						"type": "String"
+					},
+					{
+						"name": "Prioridad",
+						"type": "String"
+					},
+					{
+						"name": "Estado_Caso",
+						"type": "String"
+					},
+					{
+						"name": "Tiempo_Respuesta_Horas",
+						"type": "String"
+					},
+					{
+						"name": "Tiempo_Cierre_Horas",
+						"type": "String"
+					},
+					{
+						"name": "Responsable",
+						"type": "String"
+					},
+					{
+						"name": "Escalado",
+						"type": "String"
+					},
+					{
+						"name": "Resultado",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FileLocation')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EncuestaSatisfaccion')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FileLocation",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Encuestas_Satisfaccion",
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "Data_Sintetica_Gildemeister_BigData_2026.xlsx"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "ID_Encuesta",
+						"type": "String"
+					},
+					{
+						"name": "Fecha_Encuesta",
+						"type": "String"
+					},
+					{
+						"name": "Tipo_Encuesta",
+						"type": "String"
+					},
+					{
+						"name": "ID_Cliente",
+						"type": "String"
+					},
+					{
+						"name": "ID_Relacionado",
+						"type": "String"
+					},
+					{
+						"name": "ID_Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Dealer",
+						"type": "String"
+					},
+					{
+						"name": "Asesor",
+						"type": "String"
+					},
+					{
+						"name": "Estado_Encuesta",
+						"type": "String"
+					},
+					{
+						"name": "NPS",
+						"type": "String"
+					},
+					{
+						"name": "CSAT",
+						"type": "String"
+					},
+					{
+						"name": "CES",
+						"type": "String"
+					},
+					{
+						"name": "Calificacion_General",
+						"type": "String"
+					},
+					{
+						"name": "Alerta",
+						"type": "String"
+					},
+					{
+						"name": "Comentario",
+						"type": "String"
+					},
+					{
+						"name": "Cliente_Detractor",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FileLocation')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DiccionarioDatos')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FileLocation",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Diccionario",
+					"location": {
+						"type": "FileServerLocation",
+						"fileName": "Data_Sintetica_Gildemeister_BigData_2026.xlsx"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Tabla",
+						"type": "String"
+					},
+					{
+						"name": "Descripción",
+						"type": "String"
+					},
+					{
+						"name": "Clave primaria",
+						"type": "String"
+					},
+					{
+						"name": "Claves de relación principales",
+						"type": "String"
+					},
+					{
+						"name": "Uso analítico",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FileLocation')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureDataLakeStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('AzureDataLakeStorage1_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('AzureDataLakeStorage1_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureDataLakeStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileSystem": "raw-data"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureDataLakeStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "OnPremptoCloudPipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Hour",
+						"interval": 15,
+						"startTime": "2026-05-28T15:55:00",
+						"timeZone": "SA Pacific Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/OnPremptoCloudPipeline')]"
+			]
+		}
+	]
+}
