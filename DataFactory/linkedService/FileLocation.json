@@ -1,0 +1,17 @@
+{
+	"name": "FileLocation",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\Users\\Carolina\\Desktop\\CICLO 10\\BIG DATA\\TF-FINAL DATA",
+			"userId": "Carolina",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJkM2IzZWEzYy02NzEyLTQ4ZWQtOTNjYS1hZWZmNjY0YjA2YWEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "OnPremptoAzureIntegrationRunTime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
