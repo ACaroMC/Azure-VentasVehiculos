@@ -1,0 +1,101 @@
+{
+	"name": "VentaVehiculos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Ventas_Vehiculos",
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "Data_Sintetica_Gildemeister_BigData_2026.xlsx"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "ID_Venta",
+				"type": "String"
+			},
+			{
+				"name": "Fecha_Venta",
+				"type": "String"
+			},
+			{
+				"name": "ID_Cliente",
+				"type": "String"
+			},
+			{
+				"name": "ID_Dealer",
+				"type": "String"
+			},
+			{
+				"name": "Dealer",
+				"type": "String"
+			},
+			{
+				"name": "Ciudad",
+				"type": "String"
+			},
+			{
+				"name": "ID_Asesor",
+				"type": "String"
+			},
+			{
+				"name": "Asesor_Comercial",
+				"type": "String"
+			},
+			{
+				"name": "ID_Vehiculo",
+				"type": "String"
+			},
+			{
+				"name": "Marca",
+				"type": "String"
+			},
+			{
+				"name": "Modelo",
+				"type": "String"
+			},
+			{
+				"name": "Categoria",
+				"type": "String"
+			},
+			{
+				"name": "Canal_Venta",
+				"type": "String"
+			},
+			{
+				"name": "Precio_Lista_USD",
+				"type": "String"
+			},
+			{
+				"name": "Descuento_USD",
+				"type": "String"
+			},
+			{
+				"name": "Monto_Venta_USD",
+				"type": "String"
+			},
+			{
+				"name": "Margen_Estimado_USD",
+				"type": "String"
+			},
+			{
+				"name": "Estado_Venta",
+				"type": "String"
+			},
+			{
+				"name": "Tiempo_Cierre_Dias",
+				"type": "String"
+			},
+			{
+				"name": "Tiene_Postventa",
+				"type": "String"
+			}
+		]
+	}
+}

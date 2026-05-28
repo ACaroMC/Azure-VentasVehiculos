@@ -1,0 +1,41 @@
+{
+	"name": "DiccionarioDatos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Diccionario",
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "Data_Sintetica_Gildemeister_BigData_2026.xlsx"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Tabla",
+				"type": "String"
+			},
+			{
+				"name": "Descripción",
+				"type": "String"
+			},
+			{
+				"name": "Clave primaria",
+				"type": "String"
+			},
+			{
+				"name": "Claves de relación principales",
+				"type": "String"
+			},
+			{
+				"name": "Uso analítico",
+				"type": "String"
+			}
+		]
+	}
+}
