@@ -1,0 +1,15 @@
+{
+	"name": "VentasVehiculosFactory",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Enabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "4746493a-955a-4a45-bc48-b7faeb8c46d5",
+		"tenantId": "a7088117-a272-4da2-b5ec-e4af917184d4"
+	}
+}
