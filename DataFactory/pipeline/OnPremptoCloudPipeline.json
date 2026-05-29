@@ -71,10 +71,21 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "FileServerWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -82,11 +93,25 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
-				"outputs": [
+				"inputs": [
 					{
 						"referenceName": "Venta_Vehiculos",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Out_VentaVehiculos",
 						"type": "DatasetReference"
 					}
 				]
@@ -111,10 +136,21 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "FileServerWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -122,11 +158,25 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
-				"outputs": [
+				"inputs": [
 					{
 						"referenceName": "Servicio_PostVenta",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "OUT_ServicioVenta",
 						"type": "DatasetReference"
 					}
 				]
@@ -151,10 +201,21 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "FileServerWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -162,11 +223,25 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
-				"outputs": [
+				"inputs": [
 					{
 						"referenceName": "Atencion_Cliente",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "OUT_AtencionAlCliente",
 						"type": "DatasetReference"
 					}
 				]
@@ -191,10 +266,21 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "FileServerReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
 					"sink": {
 						"type": "DelimitedTextSink",
 						"storeSettings": {
-							"type": "FileServerWriteSettings"
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
@@ -202,11 +288,25 @@
 							"fileExtension": ".txt"
 						}
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
-				"outputs": [
+				"inputs": [
 					{
 						"referenceName": "EncuestasSatisfaccion",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Out_EncuestasSatisfaccion",
 						"type": "DatasetReference"
 					}
 				]
