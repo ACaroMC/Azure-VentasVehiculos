@@ -111,7 +111,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Out_VentaVehiculos",
+						"referenceName": "Sink",
 						"type": "DatasetReference"
 					}
 				]
@@ -176,7 +176,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "OUT_ServicioVenta",
+						"referenceName": "Sink",
 						"type": "DatasetReference"
 					}
 				]
@@ -235,13 +235,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Atencion_Cliente",
+						"referenceName": "Atencion_AlCliente",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "OUT_AtencionAlCliente",
+						"referenceName": "Sink",
 						"type": "DatasetReference"
 					}
 				]
@@ -306,7 +306,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "Out_EncuestasSatisfaccion",
+						"referenceName": "Sink",
 						"type": "DatasetReference"
 					}
 				]
