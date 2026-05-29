@@ -1,0 +1,27 @@
+{
+	"name": "Venta_Vehiculos",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "VentaVehiculos.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ID_Venta;Fecha_Venta;ID_Cliente;ID_Dealer;Dealer;Ciudad;ID_Asesor;Asesor_Comercial;ID_Vehiculo;Marca;Modelo;Categoria;Canal_Venta;Precio_Lista_USD;Descuento_USD;Monto_Venta_USD;Margen_Estimado_USD;Estado_Venta;Tiempo_Cierre_Dias;Tiene_Postventa",
+				"type": "String"
+			}
+		]
+	}
+}

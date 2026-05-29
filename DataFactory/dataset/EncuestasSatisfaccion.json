@@ -1,0 +1,27 @@
+{
+	"name": "EncuestasSatisfaccion",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "EncuestasSatisfacción.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ID_Encuesta;Fecha_Encuesta;Tipo_Encuesta;ID_Cliente;ID_Relacionado;ID_Dealer;Dealer;Asesor;Estado_Encuesta;NPS;CSAT;CES;Calificacion_General;Alerta;Comentario;Cliente_Detractor",
+				"type": "String"
+			}
+		]
+	}
+}

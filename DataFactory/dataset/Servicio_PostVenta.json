@@ -1,0 +1,27 @@
+{
+	"name": "Servicio_PostVenta",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "Servicio PostVenta.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ID_Servicio;Fecha_Servicio;ID_Cliente;ID_Dealer;Dealer;Ciudad;ID_Asesor_Servicio;Asesor_Servicio;Tipo_Servicio;Kilometraje;Monto_Servicio_USD;Tiempo_Espera_Horas;Tiempo_Entrega_Dias;Estado_Servicio;Reincidencia;Observacion",
+				"type": "String"
+			}
+		]
+	}
+}

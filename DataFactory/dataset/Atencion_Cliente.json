@@ -1,0 +1,27 @@
+{
+	"name": "Atencion_Cliente",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FileLocation",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "AtencionCliente.csv"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "ID_Caso;Fecha_Caso;ID_Cliente;ID_Dealer;Dealer;Canal_Atencion;Motivo;Prioridad;Estado_Caso;Tiempo_Respuesta_Horas;Tiempo_Cierre_Horas;Responsable;Escalado;Resultado",
+				"type": "String"
+			}
+		]
+	}
+}
