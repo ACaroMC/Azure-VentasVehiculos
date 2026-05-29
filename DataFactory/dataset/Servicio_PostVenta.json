@@ -2,14 +2,14 @@
 	"name": "Servicio_PostVenta",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "AzureDataLakeStorage1",
+			"referenceName": "FileLocation",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
 			"location": {
-				"type": "AzureBlobFSLocation",
+				"type": "FileServerLocation",
 				"fileName": "Servicio PostVenta.csv"
 			},
 			"columnDelimiter": ",",
